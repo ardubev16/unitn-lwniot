@@ -111,6 +111,7 @@ void bc_recv(struct broadcast_conn *bc_conn, const linkaddr_t *sender) {
     return;
 
   if (beacon.seqn > conn->beacon_seqn ||
+      (beacon.seqn == 0 && conn->beacon_seqn == UINT16_MAX) ||
       (beacon.seqn == conn->beacon_seqn && beacon.metric + 1 < conn->metric)) {
 
     conn->beacon_seqn = beacon.seqn;
