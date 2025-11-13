@@ -8,7 +8,7 @@
   <project EXPORT="discard">[APPS_DIR]/powertracker</project>
   <simulation>
     <title>My simulation</title>
-    <randomseed>123455</randomseed>
+    <randomseed>123456</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.cooja.radiomediums.UDGMConstantLoss
@@ -24,7 +24,7 @@
       org.contikios.cooja.mspmote.SkyMoteType
       <identifier>sky1</identifier>
       <description>Sky Mote Type #sky1</description>
-      <firmware EXPORT="copy">[CONFIG_DIR]/app.sky</firmware>
+      <firmware EXPORT="copy">[CONFIG_DIR]/../app.sky</firmware>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.RimeAddress</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.IPAddress</moteinterface>
@@ -225,7 +225,7 @@
   <plugin>
     org.contikios.cooja.plugins.SimControl
     <width>280</width>
-    <z>3</z>
+    <z>1</z>
     <height>160</height>
     <location_x>564</location_x>
     <location_y>15</location_y>
@@ -238,10 +238,10 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.756105527170003 0.0 0.0 2.756105527170003 57.194723641499806 30.060464382240603</viewport>
+      <viewport>2.756105527170003 0.0 0.0 2.756105527170003 56.19472364149981 30.060464382240603</viewport>
     </plugin_config>
     <width>448</width>
-    <z>0</z>
+    <z>5</z>
     <height>422</height>
     <location_x>16</location_x>
     <location_y>40</location_y>
@@ -249,15 +249,15 @@
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter />
+      <filter>new</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <width>924</width>
-    <z>1</z>
+    <width>648</width>
+    <z>2</z>
     <height>296</height>
-    <location_x>477</location_x>
-    <location_y>178</location_y>
+    <location_x>486</location_x>
+    <location_y>201</location_y>
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -278,10 +278,87 @@
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
     <width>1361</width>
-    <z>2</z>
+    <z>0</z>
     <height>275</height>
-    <location_x>12</location_x>
-    <location_y>493</location_y>
+    <location_x>11</location_x>
+    <location_y>504</location_y>
+  </plugin>
+  <plugin>
+    PowerTracker
+    <width>400</width>
+    <z>4</z>
+    <height>249</height>
+    <location_x>1090</location_x>
+    <location_y>245</location_y>
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.RadioLogger
+    <plugin_config>
+      <split>129</split>
+      <formatted_time />
+      <showdups>false</showdups>
+      <hidenodests>false</hidenodests>
+    </plugin_config>
+    <width>500</width>
+    <z>3</z>
+    <height>219</height>
+    <location_x>890</location_x>
+    <location_y>7</location_y>
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>SIM_SETTLING_TIME = 1000
+        TIMEOUT(1800000);
+        try {
+          load("nashorn:mozilla_compat.js");
+        } catch(err) {}
+
+        //import Java Package to JavaScript
+        importPackage(java.io);
+
+        importPackage(java.util);
+
+        allm = sim.getMotes();
+        nmotes = allm.length;
+
+        ptplugin = sim.getCooja().getStartedPlugin("PowerTracker");
+        ptplugin.reset();
+
+        outputs = new FileWriter("test_circular_nogui.log");
+        dcoutputs = new FileWriter("test_circular_nogui_dc.log");
+
+        // Generate a message to reset the powertracker stats after SIM_SETTLING_TIME
+        GENERATE_MSG(SIM_SETTLING_TIME, "Simulation Settling Time");
+
+        while (true) {
+          if(msg.equals("Simulation Settling Time")) {
+            ptplugin.reset();
+          } else {
+            //Write to file.
+            outputs.write(time + "\tID:" + id + "\t" + msg + "\n");
+          }
+
+          try{
+            //This is the tricky part. The Script is terminated using
+            // an exception. This needs to be caught.
+              YIELD();
+          } catch (e) {
+            // Get the PowerTracker Stats
+            stats = ptplugin.radioStatistics();
+            dcoutputs.write(stats + "\n");
+
+            //Close files.
+            outputs.close();
+            dcoutputs.close();
+
+            //Rethrow exception again, to end the script.
+            throw('test script killed');
+          }
+        }
+      </script>
+      <active>true</active>
+    </plugin_config>
   </plugin>
 </simconf>
 

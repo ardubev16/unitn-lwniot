@@ -24,7 +24,7 @@
       org.contikios.cooja.mspmote.SkyMoteType
       <identifier>sky1</identifier>
       <description>Sky Mote Type #sky1</description>
-      <firmware EXPORT="copy">[CONFIG_DIR]/app.sky</firmware>
+      <firmware EXPORT="copy">[CONFIG_DIR]/../app.sky</firmware>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.RimeAddress</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.IPAddress</moteinterface>
@@ -225,7 +225,7 @@
   <plugin>
     org.contikios.cooja.plugins.SimControl
     <width>280</width>
-    <z>1</z>
+    <z>0</z>
     <height>160</height>
     <location_x>470</location_x>
     <location_y>22</location_y>
@@ -241,7 +241,7 @@
       <viewport>1.4507238263211193 0.0 0.0 1.4507238263211193 134.64986552713634 110.96589130662998</viewport>
     </plugin_config>
     <width>400</width>
-    <z>2</z>
+    <z>4</z>
     <height>449</height>
     <location_x>1</location_x>
     <location_y>1</location_y>
@@ -254,7 +254,7 @@
       <coloring />
     </plugin_config>
     <width>895</width>
-    <z>0</z>
+    <z>2</z>
     <height>240</height>
     <location_x>403</location_x>
     <location_y>230</location_y>
@@ -277,8 +277,8 @@
       <showLEDs />
       <zoomfactor>50000.0</zoomfactor>
     </plugin_config>
-    <width>1181</width>
-    <z>4</z>
+    <width>1022</width>
+    <z>3</z>
     <height>282</height>
     <location_x>32</location_x>
     <location_y>476</location_y>
@@ -292,10 +292,18 @@
       <hidenodests>false</hidenodests>
     </plugin_config>
     <width>500</width>
-    <z>3</z>
+    <z>5</z>
     <height>300</height>
     <location_x>813</location_x>
     <location_y>4</location_y>
+  </plugin>
+  <plugin>
+    PowerTracker
+    <width>400</width>
+    <z>1</z>
+    <height>400</height>
+    <location_x>1033</location_x>
+    <location_y>357</location_y>
   </plugin>
 </simconf>
 
