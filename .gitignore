@@ -21,3 +21,6 @@ obj_evb1000/*
 obj_dwm1001/*
 obj_srf06-cc26xx
 *.sky
+
+symbols.c
+symbols.h
